@@ -172,6 +172,30 @@ const addAnOrderToUser = async (req: Request, res: Response) => {
   }
 };
 
+// get all orders of a user
+const getAllOrdersOfAUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getAllOrdersOfAUser(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully!',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message:
+        'Something went wrong while fetching orders of the user! Please try again.',
+      error: {
+        code: 404,
+        description: err.message,
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
@@ -179,4 +203,5 @@ export const UserControllers = {
   updateSingleUser,
   deleteSingleUser,
   addAnOrderToUser,
+  getAllOrdersOfAUser,
 };

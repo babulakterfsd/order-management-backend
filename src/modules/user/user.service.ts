@@ -74,6 +74,18 @@ const addOrderToUser = async (userId: string, order: TOrder) => {
   }
 };
 
+// get all orders of a user
+const getAllOrdersOfAUser = async (userId: string) => {
+  const userExists = await UserModel.isUserExists(userId);
+
+  if (!userExists) {
+    throw new Error('Can not fetch orders as user does not exists');
+  } else {
+    const result = await UserModel.find({ userId }).select('orders -_id');
+    return result[0];
+  }
+};
+
 export const userServices = {
   createUserInTheDB,
   getAllUsersFromDB,
@@ -81,4 +93,5 @@ export const userServices = {
   updateSingleUserInTheDB,
   deleteSingleUserFromDB,
   addOrderToUser,
+  getAllOrdersOfAUser,
 };
