@@ -1,6 +1,6 @@
 # Assignment 2 - Order Management System
 
-- technologies: TypeScript, Node.js, Express.js, MongoDB, Mongoose, Zod, validator, Bcrypt
+- technologies: TypeScript, Node.js, Express.js, MongoDB, Mongoose, Zod, Validator, Bcrypt
 
 ## How to run
 
