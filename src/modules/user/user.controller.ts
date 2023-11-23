@@ -1,0 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response } from 'express';
+import { userServices } from './user.service';
+import userValidation from './user.validation';
+
+const createUser = async (req: Request, res: Response) => {
+  try {
+    const { user: userData } = req.body;
+    const zodParsedData = userValidation.parse(userData);
+    const result = await userServices.createUserInTheDB(zodParsedData);
+
+    const modifiedResult = {
+      userId: result.userId,
+      username: result.username,
+      fullName: result.fullName,
+      age: result.age,
+      email: result.email,
+      isActive: result.isActive,
+      hobbies: result.hobbies,
+      address: result.address,
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'User created successfully!',
+      data: modifiedResult,
+    });
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: 'Something went wrong while creating user! Please try again.',
+      error: {
+        code: 404,
+        description:
+          err.message || `${err?.issues[0]?.path} : ${err?.issues[0]?.message}`,
+      },
+    });
+  }
+};
+
+export const UserControllers = {
+  createUser,
+};

@@ -1,4 +1,6 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
+import config from '../../config';
 import { TAddress, TFullName, TOrder, TUser } from './user.interface';
 
 const fullNameSchema = new Schema<TFullName>({
@@ -77,6 +79,23 @@ const userSchema = new Schema<TUser>({
   },
   address: addressSchema,
   orders: [orderSchema],
+});
+
+// hashing the password before saving it to the database
+userSchema.pre<TUser>('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+
+  next();
+});
+
+// first layer of making sure that the password is not returned in the response
+userSchema.post<TUser>('save', function (doc, next) {
+  doc.password = '';
+
+  next();
 });
 
 export const UserModel = model<TUser>('users', userSchema);
