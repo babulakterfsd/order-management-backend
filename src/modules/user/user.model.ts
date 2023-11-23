@@ -44,42 +44,51 @@ const addressSchema = new Schema<TAddress>({
   },
 });
 
-const userSchema = new Schema<TUser>({
-  userId: {
-    type: Number,
-    required: [true, 'User ID is required'],
-    unique: true,
+const userSchema = new Schema<TUser>(
+  {
+    userId: {
+      type: Number,
+      required: [true, 'User ID is required'],
+      unique: true,
+    },
+    username: {
+      type: String,
+      required: [true, 'Username is required'],
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+    },
+    fullName: fullNameSchema,
+    age: {
+      type: Number,
+      required: [true, 'Age is required'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+    },
+    isActive: {
+      type: Boolean,
+      required: [true, 'isActive is required'],
+      default: true,
+    },
+    hobbies: {
+      type: [String],
+      required: [true, 'Hobbies is required'],
+    },
+    address: addressSchema,
+    orders: [orderSchema],
   },
-  username: {
-    type: String,
-    required: [true, 'Username is required'],
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-  },
-  fullName: fullNameSchema,
-  age: {
-    type: Number,
-    required: [true, 'Age is required'],
-  },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-  },
-  isActive: {
-    type: Boolean,
-    required: [true, 'isActive is required'],
-    default: true,
-  },
-  hobbies: {
-    type: [String],
-    required: [true, 'Hobbies is required'],
-  },
-  address: addressSchema,
-  orders: [orderSchema],
-});
+  {
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+      },
+    },
+  }
+);
 
 // hashing the password before saving it to the database
 userSchema.pre<TUser>('save', async function (next) {
@@ -91,7 +100,7 @@ userSchema.pre<TUser>('save', async function (next) {
   next();
 });
 
-// first layer of making sure that the password is not returned in the response
+// another layer of making sure that the password is not returned in the response
 userSchema.post<TUser>('save', function (doc, next) {
   doc.password = '';
 
