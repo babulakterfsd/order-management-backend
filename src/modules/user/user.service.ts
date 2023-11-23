@@ -86,6 +86,24 @@ const getAllOrdersOfAUser = async (userId: string) => {
   }
 };
 
+// calculate total price of all orders of a user
+const calculateTotalPriceOfAllOrdersOfAUser = async (userId: string) => {
+  const userExists = await UserModel.isUserExists(userId);
+
+  if (!userExists) {
+    throw new Error('Can not calculate total price as user does not exists');
+  } else {
+    const result = await UserModel.find({ userId }).select('orders -_id');
+    const totalPrice = result[0]?.orders?.reduce(
+      (acc: number, order: TOrder) => {
+        return acc + order.price * order.quantity;
+      },
+      0
+    );
+    return totalPrice;
+  }
+};
+
 export const userServices = {
   createUserInTheDB,
   getAllUsersFromDB,
@@ -94,4 +112,5 @@ export const userServices = {
   deleteSingleUserFromDB,
   addOrderToUser,
   getAllOrdersOfAUser,
+  calculateTotalPriceOfAllOrdersOfAUser,
 };
