@@ -1,7 +1,13 @@
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../config';
-import { TAddress, TFullName, TOrder, TUser } from './user.interface';
+import {
+  TAddress,
+  TFullName,
+  TOrder,
+  TUser,
+  TUserModel,
+} from './user.interface';
 
 const fullNameSchema = new Schema<TFullName>({
   firstName: {
@@ -44,7 +50,7 @@ const addressSchema = new Schema<TAddress>({
   },
 });
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser, TUserModel>(
   {
     userId: {
       type: Number,
@@ -107,4 +113,10 @@ userSchema.post<TUser>('save', function (doc, next) {
   next();
 });
 
-export const UserModel = model<TUser>('users', userSchema);
+//custom static method to check if the user exists or not
+userSchema.statics.isUserExists = async function (userId: string) {
+  const userExists = await UserModel.findOne({ userId });
+  return userExists;
+};
+
+export const UserModel = model<TUser, TUserModel>('users', userSchema);

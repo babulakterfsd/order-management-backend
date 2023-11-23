@@ -15,7 +15,20 @@ const getAllUsersFromDB = async () => {
   return result;
 };
 
+// get single user from the database
+const getSingleUserFromDB = async (userId: string) => {
+  const userExists = await UserModel.isUserExists(userId);
+
+  if (!userExists) {
+    throw new Error('User does not exists');
+  } else {
+    const result = await UserModel.find({ userId }).select('-_id');
+    return result[0];
+  }
+};
+
 export const userServices = {
   createUserInTheDB,
   getAllUsersFromDB,
+  getSingleUserFromDB,
 };
