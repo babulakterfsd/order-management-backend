@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../config';
@@ -7,6 +8,7 @@ import {
   TOrder,
   TUser,
   TUserModel,
+  TUserUpdate,
 } from './user.interface';
 
 const fullNameSchema = new Schema<TFullName>({
@@ -102,6 +104,19 @@ userSchema.pre<TUser>('save', async function (next) {
     this.password,
     Number(config.bcrypt_salt_rounds)
   );
+
+  next();
+});
+
+// hashing the password before updating it to the database
+userSchema.pre('findOneAndUpdate', async function (next) {
+  const dataToBeUpdated: TUserUpdate = this.getUpdate() as TUserUpdate;
+  if (dataToBeUpdated && dataToBeUpdated?.password) {
+    dataToBeUpdated.password = await bcrypt.hash(
+      dataToBeUpdated.password,
+      Number(config.bcrypt_salt_rounds)
+    );
+  }
 
   next();
 });
