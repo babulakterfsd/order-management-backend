@@ -147,10 +147,36 @@ const deleteSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// add order to user
+const addAnOrderToUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const orderToBeAdded = req.body;
+    await userServices.addOrderToUser(userId, orderToBeAdded);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    });
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message:
+        'Something went wrong while creating an order to the user! Please try again.',
+      error: {
+        code: 404,
+        description: err.message,
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
+  addAnOrderToUser,
 };

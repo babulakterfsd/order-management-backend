@@ -1,4 +1,4 @@
-import { TUser } from './user.interface';
+import { TOrder, TUser } from './user.interface';
 import { UserModel } from './user.model';
 
 // create user in the database
@@ -60,10 +60,25 @@ const deleteSingleUserFromDB = async (userId: string) => {
   }
 };
 
+// add order to the user
+const addOrderToUser = async (userId: string, order: TOrder) => {
+  const userExists = await UserModel.isUserExists(userId);
+
+  if (!userExists) {
+    throw new Error('Can not add order as user does not exists');
+  } else {
+    const userToBeUpdated = await UserModel.find({ userId });
+    userToBeUpdated[0]?.orders?.push(order);
+    const result = await userToBeUpdated[0]?.save();
+    return result;
+  }
+};
+
 export const userServices = {
   createUserInTheDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateSingleUserInTheDB,
   deleteSingleUserFromDB,
+  addOrderToUser,
 };
