@@ -13,7 +13,7 @@ app.use('/api/users', UserRoute);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    message: 'Welcome to Order Management System Server',
+    message: 'Welcome to Order Management System',
   });
 });
 
