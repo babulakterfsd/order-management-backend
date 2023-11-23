@@ -1,15 +1,15 @@
-type TFullName = {
+export type TFullName = {
   firstName: string;
   lastName: string;
 };
 
-type TOrder = {
+export type TOrder = {
   productName: string;
   price: number;
   quantity: number;
 };
 
-type TAddress = {
+export type TAddress = {
   street: string;
   city: string;
   country: string;
