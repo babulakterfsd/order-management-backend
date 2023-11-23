@@ -22,7 +22,7 @@ const getSingleUserFromDB = async (userId: string) => {
   if (!userExists) {
     throw new Error('User does not exists');
   } else {
-    const result = await UserModel.find({ userId }).select('-_id');
+    const result = await UserModel.find({ userId }).select('-_id -orders -__v');
     return result[0];
   }
 };
