@@ -22,3 +22,4 @@
 - Add order to user -> PUT : /api/users/:id/orders
 - Get all orders of a user -> GET : /api/users/:id/orders
 - Get Total price of all orders of a user -> GET : /api/users/:id/orders/total-price
+- except these all, all routes will send a response with api not found message.
