@@ -11,3 +11,14 @@
 ### live link
 
 - https://order-management-backend-kappa.vercel.app
+
+### API endpoints and methods
+
+- Create new user -> POST : /api/users
+- Get all users -> GET : /api/users
+- Get user by id -> GET : /api/users/:id
+- Update user by id -> PUT : /api/users/:id
+- Delete user by id -> DELETE : /api/users/:id
+- Add order to user -> PUT : /api/users/:id/orders
+- Get all orders of a user -> GET : /api/users/:id/orders
+- Get Total price of all orders of a user -> GET : /api/users/:id/orders/total-price
