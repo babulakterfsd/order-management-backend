@@ -67,9 +67,14 @@ const addOrderToUser = async (userId: string, order: TOrder) => {
   if (!userExists) {
     throw new Error('Can not add order as user does not exists');
   } else {
-    const userToBeUpdated = await UserModel.find({ userId });
-    userToBeUpdated[0]?.orders?.push(order);
-    const result = await userToBeUpdated[0]?.save();
+    const result = await UserModel.findOneAndUpdate(
+      { userId },
+      { $push: { orders: order } },
+      {
+        new: true,
+      }
+    );
+
     return result;
   }
 };
