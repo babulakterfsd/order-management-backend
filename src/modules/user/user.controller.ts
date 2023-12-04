@@ -6,8 +6,7 @@ import userValidation from './user.validation';
 // create user
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
-    const zodParsedData = userValidation.parse(userData);
+    const zodParsedData = userValidation.parse(req.body);
     const result = await userServices.createUserInTheDB(zodParsedData);
 
     const modifiedResult = {
@@ -88,11 +87,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { user: userDataToBeUpdated } = req.body;
-    const result = await userServices.updateSingleUserInTheDB(
-      userId,
-      userDataToBeUpdated
-    );
+    const result = await userServices.updateSingleUserInTheDB(userId, req.body);
 
     const modifiedResult = {
       userId: result?.userId,
